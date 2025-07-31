@@ -2,9 +2,13 @@ package io.spring.infrastructure.service;
 
 import io.spring.core.service.JwtService;
 import io.spring.core.user.User;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
 import org.junit.Before;
 import org.junit.Test;
 
+import javax.crypto.SecretKey;
+import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
@@ -18,7 +22,9 @@ public class DefaultJwtServiceTest {
 
     @Before
     public void setUp() {
-        jwtService = new DefaultJwtService("123123", 3600);
+        SecretKey key = Keys.secretKeyFor(SignatureAlgorithm.HS512);
+        String keyString = java.util.Base64.getEncoder().encodeToString(key.getEncoded());
+        jwtService = new DefaultJwtService(keyString, 3600);
     }
 
     @Test
